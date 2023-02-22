@@ -6,10 +6,13 @@ import styles from './Categoria.module.scss';
 
 export default function Categoria() {
   const { nomeCategoria } = useParams();
-  const { categoria, itens } = useSelector(state => ({
-    categoria: state.categorias.find(categoria => categoria.id === nomeCategoria),
-    itens: state.itens.filter(item => item.categoria === nomeCategoria),
-  }));
+  const { categoria, itens } = useSelector(state => {
+    const ragexp = new RegExp(state.busca, 'i');
+    return {
+      categoria: state.categorias.find(categoria => categoria.id === nomeCategoria),
+      itens: state.itens.filter(item => item.categoria === nomeCategoria && item.titulo.match(ragexp))
+    }
+  });
 
   return (
     <div>
