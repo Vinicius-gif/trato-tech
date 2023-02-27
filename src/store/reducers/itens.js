@@ -1,6 +1,10 @@
+import { createStandaloneToast } from '@chakra-ui/toast';
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
-import itensService from 'services/itens';
+import { resetarCarrinho } from './carrinho';
 import { v4 as uuid } from 'uuid';
+import itensService from 'services/itens';
+
+const { toast } = createStandaloneToast();
 
 const initialState = [];
 
@@ -29,13 +33,56 @@ const itensSlice = createSlice({
     deletarItem: (state, { payload }) => {
       const index = state.findIndex(item => item.id === payload);
       state.splice(index, 1);
-    },
+    }
   },
   extraReducers: builder => {
     builder.addCase(
       buscarItens.fulfilled,
       (state, { payload }) => {
-        return payload
+        toast({
+          title: 'Sucesso!',
+          description: 'Itens carregadas com sucesso!',
+          status: 'success',
+          duration: 2000,
+          isClosable: true
+        })
+        return payload;
+      }
+    )
+    .addCase(
+      buscarItens.pending,
+      (state, { payload }) => {
+        toast({
+          title: 'Carregando',
+          description: 'Carregando itens',
+          status: 'loading',
+          duration: 2000,
+          isClosable: true
+        })
+      }
+    )
+    .addCase(
+      buscarItens.rejected,
+      (state, { payload }) => {
+        toast({
+          title: 'Erro',
+          description: 'Erro na busca de Itens',
+          status: 'error',
+          duration: 2000,
+          isClosable: true
+        })
+      }
+    )
+    .addCase(
+      resetarCarrinho.type,
+      () => {
+        toast({
+          title: 'Sucesso!',
+          description: 'Compra completada com sucesso!',
+          status: 'success',
+          duration: 2000,
+          isClosable: true
+        })
       }
     )
   }

@@ -26,6 +26,7 @@ export default function Carrinho() {
       total,
     };
   });
+
   return (
     <div>
       <Header
