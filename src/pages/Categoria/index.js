@@ -4,7 +4,7 @@ import Item from 'components/Item';
 import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate, useParams } from 'react-router-dom';
-import { buscarItens } from 'store/reducers/itens';
+import { carregarUmaCategoria } from 'store/reducers/categorias';
 import styles from './Categoria.module.scss';
 
 export default function Categoria() {
@@ -21,8 +21,8 @@ export default function Categoria() {
   });
 
   useEffect(() => {
-    dispatch( buscarItens());
-  }, [dispatch]);
+    dispatch(carregarUmaCategoria(nomeCategoria));
+  }, [dispatch, nomeCategoria])
 
   return (
     <div>
