@@ -1,49 +1,33 @@
-import { createStandaloneToast } from "@chakra-ui/toast";
 import { createListenerMiddleware } from "@reduxjs/toolkit";
 import itensService from "services/itens";
-import { adicionarTodosOsItens, carregarItens } from "store/reducers/itens";
+import { carregarUmaCategoria } from "store/reducers/categorias";
+import { carregarItens } from "store/reducers/itens";
+import criarTarefa from "./utils/criarTarefa";
 
-export const listener = createListenerMiddleware(); // crie o middleware
+export const itensListner = createListenerMiddleware(); // crie o middleware
 
-const {toast } = createStandaloneToast();
+itensListner.startListening({ // utilize o startListening
+  actionCreator: carregarUmaCategoria, // escute a action
+  effect: async (action, { dispatch, fork, unsubscribe, getState }) => {
+    const { itens } = getState();
 
-listener.startListening({ // utilize o startListening
-  actionCreator: carregarItens, // escute a action
-  effect: async (action, { dispatch, fork, unsubscribe }) => {
-    toast({
-      title: 'Carregando',
-      description: 'Carregando itens',
-      status: 'loading',
-      duration: 2000,
-      isClosable: true
-    })
-    const tarefa = fork(async api => {
-      await api.delay(1000);
-      return await itensService.buscar();
+    if (itens.length === 25) return unsubscribe();
+
+    const nomeCategoria = action.payload;
+
+    const itensCarregados = itens.some(item => item.categoria === nomeCategoria);
+
+    if (itensCarregados) return;
+    
+    await criarTarefa({
+      fork,
+      dispatch,
+      action: carregarItens,
+      busca: () => itensService.buscarDeCategorias(nomeCategoria),
+      textoCarregando: `Carregando itens da categoria ${nomeCategoria}`,
+      textoSucesso: `Itens da categoria ${nomeCategoria} carregados com sucesso!`,
+      textoErro: 'Erro na busca de itens',
     });
-
-    const resposta = await tarefa.result;
-
-    if (resposta.status === 'ok') {
-      toast({
-        title: 'Sucesso!',
-        description: 'Itens carregados com sucesso!',
-        status: 'success',
-        duration: 2000,
-        isClosable: true
-      });
-      dispatch(adicionarTodosOsItens(resposta.value));
-      unsubscribe();
-    }
-
-    if (resposta.status === 'rejected') {
-      toast({
-        title: 'Erro',
-        description: 'Erro na busca de itens',
-        status: 'error',
-        duration: 2000,
-        isClosable: true
-      })
-    }
+    
   }
 });

@@ -1,19 +1,19 @@
 import Header from 'components/Header';
 import styles from './Carrinho.module.scss';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import Item from 'components/Item';
 import { resetarCarrinho } from 'store/reducers/carrinho';
 import Button from 'components/Button';
 
 export default function Carrinho() {
   const dispatch = useDispatch();
-  const {carrinho, total} = useSelector(state => {
+  const { carrinho, total } = useSelector(state => {
     let total = 0;
-    const ragexp = new RegExp(state.busca, 'i');
+    const regexp = new RegExp(state.busca, 'i');
     const carrinhoReduce = state.carrinho.reduce((itens, itemNoCarrinho) => {
       const item = state.itens.find(item => item.id === itemNoCarrinho.id);
       total += (item.preco * itemNoCarrinho.quantidade);
-      if (item.titulo.match(ragexp)) {
+      if (item.titulo.match(regexp)) {
         itens.push({
           ...item,
           quantidade: itemNoCarrinho.quantidade,
@@ -26,7 +26,6 @@ export default function Carrinho() {
       total,
     };
   });
-
   return (
     <div>
       <Header
@@ -50,4 +49,3 @@ export default function Carrinho() {
     </div>
   )
 }
-

@@ -1,8 +1,6 @@
-import { createAction, createAsyncThunk, createSlice } from '@reduxjs/toolkit';
+import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import { v4 as uuid } from 'uuid';
 import itensService from 'services/itens';
-
-export const carregarItens = createAction('itens/carregarItens');
 
 export const buscarItens = createAsyncThunk(
   'itens/buscar',
@@ -13,10 +11,6 @@ const itensSlice = createSlice({
   name: 'itens',
   initialState: [],
   reducers: {
-    adicionarTodosOsItens: (state, {payload}) => {
-      console.log(payload);
-      return payload
-    },
     mudarFavorito: (state, { payload }) => {
       state = state.map(item => {
         if(item.id === payload) item.favorito = !item.favorito;
@@ -33,10 +27,13 @@ const itensSlice = createSlice({
     deletarItem: (state, { payload }) => {
       const index = state.findIndex(item => item.id === payload);
       state.splice(index, 1);
+    },
+    carregarItens: (state, { payload }) => {
+      state.push(...payload)
     }
   }
 });
 
-export const { adicionarTodasOsItens, mudarFavorito, cadastrarItem, mudarItem, deletarItem} = itensSlice.actions;
+export const { mudarFavorito, cadastrarItem, mudarItem, deletarItem, carregarItens} = itensSlice.actions;
 
 export default itensSlice.reducer;
