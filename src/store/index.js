@@ -7,6 +7,7 @@ import { categoriasListener } from './middlewares/categorias';
 import { itensListner } from './middlewares/itens';
 import { categoriasSaga } from './sagas/categorias';
 import createSagaMiddleware from '@redux-saga/core';
+import { carrinhoSaga } from './sagas/carrinho';
 
 const sagaMiddleware = createSagaMiddleware();
 
@@ -27,5 +28,6 @@ const store = configureStore({
 });
 
 sagaMiddleware.run(categoriasSaga);
+sagaMiddleware.run(carrinhoSaga);
 
 export default store;

@@ -1,27 +1,9 @@
 import { createListenerMiddleware } from "@reduxjs/toolkit";
 import categoriasService from "services/categorias";
-import { adicionarTodasAsCategorias, adicionarUmaCategorias, carregarCategorias, carregarUmaCategoria } from "store/reducers/categorias";
+import { adicionarUmaCategorias, carregarUmaCategoria } from "store/reducers/categorias";
 import criarTarefa from "./utils/criarTarefa";
 
 export const categoriasListener = createListenerMiddleware(); // crie o middleware
-
-categoriasListener.startListening({ // utilize o startListening
-  actionCreator: carregarCategorias, // escute a action
-  effect: async (action, { dispatch, fork, unsubscribe }) => {
-    const resposta = await criarTarefa({
-      fork,
-      dispatch,
-      action: adicionarTodasAsCategorias,
-      busca: categoriasService.buscar,
-      textoCarregando: 'Carregando categorias',
-      textoSucesso: 'Categorias carregadas com sucesso!',
-      textoErro: 'Erro na busca de categorias',
-    });
-    if (resposta.status === 'ok') {
-      unsubscribe();
-    }
-  }
-});
 
 categoriasListener.startListening({
   actionCreator: carregarUmaCategoria,
