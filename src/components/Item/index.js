@@ -89,9 +89,9 @@ function Item(props) {
         <div className={styles['item-titulo']}>
           {modoDeEdicao
             ? <Input
-                value={novoTitulo}
-                onChange={evento => setNovoTitulo(evento.target.value)}
-              />
+              value={novoTitulo}
+              onChange={evento => setNovoTitulo(evento.target.value)}
+            />
             : <h2>{titulo}</h2>
           }
           <p>{descricao}</p>
