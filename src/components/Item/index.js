@@ -42,7 +42,7 @@ function Item(props) {
   const [modoDeEdicao, setModoDeEdicao] = useState(false);
   const [novoTitulo, setNovoTitulo] = useState(titulo);
   const dispatch = useDispatch();
-  const estaNoCarrinho = useSelector(state => state.carrinho.some(itemNoCarrinho => itemNoCarrinho.id === id));
+  const estaNoCarrinho = useSelector(state => state.carrinho.data?.some(itemNoCarrinho => itemNoCarrinho.id === id));
 
   function resolverFavorito() {
     dispatch(mudarFavorito(id));
@@ -60,9 +60,9 @@ function Item(props) {
         onClick={() => {
           setModoDeEdicao(false);
           dispatch(mudarItem({
-            id, 
+            id,
             item: { titulo: novoTitulo }
-          }))
+          }));
         }}
       />
       : <AiFillEdit
@@ -89,9 +89,9 @@ function Item(props) {
         <div className={styles['item-titulo']}>
           {modoDeEdicao
             ? <Input
-              value={novoTitulo}
-              onChange={evento => setNovoTitulo(evento.target.value)}
-            />
+                value={novoTitulo}
+                onChange={evento => setNovoTitulo(evento.target.value)}
+              />
             : <h2>{titulo}</h2>
           }
           <p>{descricao}</p>
@@ -143,4 +143,4 @@ function Item(props) {
   )
 }
 
-export default memo(Item)
+export default memo(Item);
